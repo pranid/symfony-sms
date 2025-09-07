@@ -1,0 +1,32 @@
+services:
+  nginx:
+    build:
+      context: ./
+      dockerfile: ./docker/nginx/Dockerfile
+    working_dir: /www
+    ports:
+      - "8080:80"
+    depends_on:
+      - php
+    volumes:
+      - .:/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    tty: true
+    networks:
+      - app
+
+  php:
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    working_dir: /www
+    volumes:
+      - .:/www
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+    tty: true
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
